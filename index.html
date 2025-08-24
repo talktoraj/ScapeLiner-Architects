@@ -16,7 +16,6 @@
 
 <body class="font-sans text-gray-800">
 
-
 <!-- Navbar -->
 <header class="absolute top-0 left-0 w-full z-20 bg-transparent">
     <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
@@ -35,28 +34,34 @@
             <a href="#contact" class="hover:text-gray-300">Contact</a>
         </nav>
 
-        <!-- Mobile Menu Button -->
+        <!-- Mobile Menu Button (visible only before opening menu) -->
         <button id="menuBtn" class="md:hidden text-white focus:outline-none">
             <!-- Hamburger Icon -->
             <svg id="hamburgerIcon" class="w-7 h-7 block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <!-- Close Icon -->
-            <svg id="closeIcon" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
     </div>
 
     <!-- Mobile Menu -->
     <div id="mobileMenu"
-        class="hidden md:hidden fixed top-0 left-0 w-full pt-20 flex flex-col space-y-4 px-6 pb-6 text-white bg-black bg-opacity-90">
+        class="opacity-0 pointer-events-none transition-opacity duration-700 md:hidden fixed top-0 left-0 w-full pt-20 flex flex-col space-y-3 px-6 pb-6 text-white">
+    
+        <!-- Hamburger Button inside menu -->
+        <button id="closeBtn" class="self-start mb-2 text-white focus:outline-none">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    
+        <!-- Links -->
         <a href="#home" class="hover:text-gray-300">Home</a>
         <a href="#about" class="hover:text-gray-300">About Us</a>
         <a href="#services" class="hover:text-gray-300">Services</a>
         <a href="#projects" class="hover:text-gray-300">Projects</a>
         <a href="#contact" class="hover:text-gray-300">Contact</a>
     </div>
+
 </header>
 
 
@@ -910,25 +915,34 @@
         });
 
 
+        
         // navbar 
-           const menuBtn = document.getElementById("menuBtn");
+            const menuBtn = document.getElementById("menuBtn");
+            const closeBtn = document.getElementById("closeBtn");
             const mobileMenu = document.getElementById("mobileMenu");
-            const hamburgerIcon = document.getElementById("hamburgerIcon");
-            const closeIcon = document.getElementById("closeIcon");
 
             menuBtn.addEventListener("click", () => {
-                mobileMenu.classList.toggle("hidden");      // show/hide menu
-                hamburgerIcon.classList.toggle("hidden");   // toggle hamburger icon
-                closeIcon.classList.toggle("hidden");       // toggle close icon
+                mobileMenu.classList.remove("opacity-0", "pointer-events-none");
+                mobileMenu.classList.add("opacity-100", "pointer-events-auto");
+                menuBtn.classList.add("hidden");
             });
 
-            // Optional: Close menu when clicking a link
-            document.querySelectorAll("#mobileMenu a").forEach(link => {
-                link.addEventListener("click", () => {
-                    mobileMenu.classList.add("hidden");
-                    hamburgerIcon.classList.remove("hidden");
-                    closeIcon.classList.add("hidden");
-                });
+            closeBtn.addEventListener("click", () => {
+                hideMenu();
+                menuBtn.classList.remove("hidden");
+            });
+
+            function hideMenu() {
+                mobileMenu.classList.remove("opacity-100", "pointer-events-auto");
+                mobileMenu.classList.add("opacity-0", "pointer-events-none");
+            }
+
+            // Close menu slowly on scroll
+            window.addEventListener("scroll", () => {
+                if (mobileMenu.classList.contains("opacity-100")) {
+                    hideMenu();
+                    menuBtn.classList.remove("hidden");
+                }
             });
 
 
